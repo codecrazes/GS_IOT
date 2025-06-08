@@ -92,33 +92,6 @@ Atualização a cada 15 segundos, com visualização contínua dos dados.
 3. Suba o código com Wi-Fi e API_KEY corretos.
 4. Verifique os gráficos e LEDs em ação.
 
-
----
-## 📊 Dashboard no ThingSpeak
-
-Para facilitar a visualização e o monitoramento dos dados coletados pelo sensor DHT22, foi criada uma **dashboard personalizada** na plataforma ThingSpeak.  
-
-### Funcionalidades da Dashboard
-
-- **Gráficos em tempo real**: Exibe a evolução da **temperatura**, **umidade** e **velocidade do vento** com atualização automática conforme os dados chegam do ESP32.
-- **Visualização clara**: Cada parâmetro possui um gráfico individual, permitindo uma análise detalhada de cada variável ambiental.
-- **Histórico de dados**: Os dados são armazenados no ThingSpeak, possibilitando consultas e análises históricas a qualquer momento.
-- **Alertas visuais**: A dashboard evidencia visualmente situações fora dos parâmetros normais, permitindo uma resposta rápida.
-
-### Como funciona
-
-1. O ESP32 envia os dados via HTTP para o ThingSpeak usando a chave API configurada.
-2. O ThingSpeak recebe os dados e atualiza os gráficos da dashboard automaticamente.
-3. O usuário pode acessar a dashboard pelo navegador para monitorar as condições ambientais em tempo real e historicamente.
-
-### Benefícios
-
-- Monitoramento remoto, sem a necessidade de estar próximo ao dispositivo.
-- Interface amigável e acessível de qualquer dispositivo conectado à internet.
-- Suporte a alertas e integrações futuras com outras plataformas IoT.
-
----
-
 ## 🔁 Fluxo Detalhado da Comunicação
 
 Este projeto envolve um fluxo contínuo e automático de dados entre três componentes principais:
