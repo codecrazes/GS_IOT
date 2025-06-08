@@ -5,8 +5,8 @@
 #define DHTPIN 15
 #define DHTTYPE DHT22
 
-#define RED_LED_PIN 13   // LED de alerta
-#define GREEN_LED_PIN 12 // LED de ambiente estável
+#define RED_LED_PIN 13   
+#define GREEN_LED_PIN 12 
 
 const char* WIFI_NAME = "Wokwi-GUEST";
 const char* WIFI_PASSWORD = "";
@@ -32,7 +32,7 @@ void setup() {
 void loop() {
   float temp = dht.readTemperature();
   float hum = dht.readHumidity();
-  float windSpeed = random(0, 50);  // Simulando velocidade do vento em km/h
+  float windSpeed = random(0, 50);  
 
   if (isnan(temp) || isnan(hum)) {
     Serial.println("⚠️ Erro no sensor. Usando valores simulados.");

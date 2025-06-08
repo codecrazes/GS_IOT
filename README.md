@@ -134,5 +134,9 @@ Este projeto envolve um fluxo contínuo e automático de dados entre três compo
 
 Essa arquitetura permite o monitoramento local (LEDs) e remoto (ThingSpeak) de forma integrada e contínua, facilitando a criação de soluções IoT eficientes, escaláveis e fáceis de replicar.
 
+## 📽️ Vídeo de Apresentação
 
+Assista ao vídeo demonstrando nossa solução completa para apoio comunitário durante enchentes e frio extremo:
+
+> 🔗 [Acesse diretamente o vídeo aqui](https://youtu.be/I-IyMrXRyKc)
 
