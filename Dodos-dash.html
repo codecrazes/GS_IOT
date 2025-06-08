@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel IoT - Monitoramento Ambiental</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #eef3f8;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    canvas {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
+    }
+    .alert {
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+    }
+    .normal { background: #4CAF50; }
+    .warning { background: #FFC107; }
+    .danger { background: #F44336; }
+  </style>
+</head>
+<body>
+
+  <h1>🌡️ Painel de Monitoramento Ambiental</h1>
+
+  <div id="alertas"></div>
+
+  <canvas id="tempChart" width="400" height="150"></canvas>
+  <canvas id="humChart" width="400" height="150"></canvas>
+  <canvas id="windChart" width="400" height="150"></canvas>
+
+  <script>
+    const CHANNEL_ID = '2983624';
+    const READ_API_KEY = 'YUGY2SMMR53QH201';
+
+    async function fetchData(field) {
+      const url = `https://api.thingspeak.com/channels/${CHANNEL_ID}/fields/${field}.json?api_key=${READ_API_KEY}&results=1`;
+      const response = await fetch(url);
+      const data = await response.json();
+      const feed = data.feeds[0];
+      return parseFloat(feed[`field${field}`]);
+    }
+
+    function showAlert(mensagem, tipo) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert ${tipo}`;
+      alertDiv.innerText = mensagem;
+      document.getElementById('alertas').appendChild(alertDiv);
+    }
+
+    async function verificarAlertas() {
+      document.getElementById('alertas').innerHTML = '';
+
+      const temp = await fetchData(1);
+      const hum = await fetchData(2);
+      const vento = await fetchData(3);
+
+      // Temperatura
+      if (temp < 12) showAlert(`🥶 Temperatura baixa: ${temp}°C`, 'warning');
+      else if (temp > 35) showAlert(`🥵 Temperatura alta: ${temp}°C`, 'danger');
+      else showAlert(`✅ Temperatura normal: ${temp}°C`, 'normal');
+
+      // Umidade
+      if (hum < 40) showAlert(`💨 Umidade baixa: ${hum}%`, 'warning');
+      else if (hum > 70) showAlert(`💦 Umidade alta: ${hum}%`, 'danger');
+      else showAlert(`✅ Umidade normal: ${hum}%`, 'normal');
+
+      // Vento
+      if (vento > 25) showAlert(`🌪️ Vento forte: ${vento} km/h`, 'danger');
+      else showAlert(`✅ Vento normal: ${vento} km/h`, 'normal');
+    }
+
+    async function plotarGrafico(canvasId, label, cor, field) {
+      const url = `https://api.thingspeak.com/channels/${CHANNEL_ID}/fields/${field}.json?api_key=${READ_API_KEY}&results=20`;
+      const response = await fetch(url);
+      const data = await response.json();
+      const labels = data.feeds.map(f => f.created_at.slice(11, 19));
+      const valores = data.feeds.map(f => parseFloat(f[`field${field}`]));
+
+      new Chart(document.getElementById(canvasId), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label,
+            data: valores,
+            borderColor: cor,
+            backgroundColor: cor + '33',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: false }
+          }
+        }
+      });
+    }
+
+    async function iniciarPainel() {
+      await verificarAlertas();
+      await plotarGrafico('tempChart', 'Temperatura (°C)', 'rgb(255,99,132)', 1);
+      await plotarGrafico('humChart', 'Umidade (%)', 'rgb(54,162,235)', 2);
+      await plotarGrafico('windChart', 'Velocidade do Vento (km/h)', 'rgb(255,206,86)', 3);
+    }
+
+    iniciarPainel();
+    setInterval(iniciarPainel, 30000); // Atualiza a cada 30 segundos
+  </script>
+
+</body>
+</html>

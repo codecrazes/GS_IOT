@@ -1,457 +1,109 @@
-# Projeto ESP32 IoT - Global Solution 2025
-
-> **🌟 PROJETO BASE - GLOBAL SOLUTION 2025**
-> 
-> ⚠️ **IMPORTANTE**: Este projeto serve APENAS como referência técnica para o desenvolvimento da Global Solution 2025.
-> Os alunos NÃO devem utilizar este código diretamente. Em vez disso, devem desenvolver suas próprias 
-> soluções inovadoras de IoT com ESP32, utilizando este material apenas como guia de implementação.
-
-## 🔄 Opções de Implementação
-
-Este repositório oferece duas opções de implementação para seu projeto IoT:
-
-### 1️⃣ MQTT com Node-RED (Pasta Q1)
-**Características**:
-- Protocolo MQTT para comunicação IoT
-- Visualização de dados via Node-RED
-- Maior flexibilidade na manipulação dos dados
-- Possibilidade de integração com diversos serviços
-- Suporte a múltiplos dispositivos simultâneos
-
-### 2️⃣ ThingSpeak (Pasta Q2)
-**Características**:
-- Implementação direta e simplificada
-- Plataforma pronta para visualização
-- Gráficos e análises integrados
-- Rápida configuração inicial
-- Interface web intuitiva
-
-> 💡 **Dica**: Cada implementação possui características específicas. Analise as funcionalidades e escolha a que melhor atende aos requisitos do seu projeto.
-
-## ⚠️ ATENÇÃO - IMPORTANTE PARA LABORATÓRIOS FIAP
-
-> Para o correto funcionamento do projeto nos laboratórios da FIAP, é necessário:
-> 
-> 1. Solicitar ao professor a liberação das portas no firewall:
->    - Porta 1883 (MQTT Broker)
->    - Porta 1880 (Node-RED Dashboard)
-> 2. Sem essa liberação, não será possível:
->    - Conectar ao broker MQTT
->    - Visualizar os dados no dashboard Node-RED
->    - Testar a comunicação do projeto
-
-## 📝 Estrutura do Projeto
-
-O repositório contém dois projetos de exemplo:
-
-```
-2TDS-GS2025/
-├── q1/                      # Projeto MQTT com Node-RED
-│   └── src/
-│       └── main.cpp        # Código principal MQTT
-├── q2/                      # Projeto ThingSpeak
-│   └── src/
-│       └── main.cpp        # Código principal ThingSpeak
-├── platformio.ini          # Configuração PlatformIO
-└── README.md               # Documentação
-```
-
-## 📡 Pasta Q1 - Monitoramento via MQTT e Node-RED
-
-### Descrição
-
-O projeto Q1 implementa um sistema IoT completo que:
-
-**Conectividade**
-- Conecta um ESP32 a uma rede Wi-Fi
-- Estabelece comunicação com broker MQTT
-- Gerencia reconexões automáticas
-
-**Sensores e Dados**
-- Leitura de temperatura e umidade (DHT22)
-- Leitura de potenciômetro (controle analógico)
-- Envio periódico de dados (10 segundos)
-- Feedback visual por LED
-
-**Identificação**
-- ID do grupo
-- ID do módulo
-- Endereço IP
-- Endereço MAC
-
-### Recursos do Servidor Q1
-
-O projeto utiliza um servidor dedicado com:
-
-- **Broker MQTT**: 
-  - Endereço: `172.208.54.189`
-  - Porta: `1883`
-  - Usuário e senha já configurados
-
-- **Node-RED**: 
-  - Interface visual em `172.208.54.189:1880`
-  - Dashboard para monitoramento em tempo real
-  - Gráficos e indicadores personalizados
-
-### Formato dos Dados Q1
-
-O JSON enviado segue este formato:
-```json
-{
-    "ID": "ID_do_Grupo",          // Identificador do grupo
-    "Sensor": "Meu_ESP32",        // Nome do dispositivo
-    "IP": "xxx.xxx.xxx.xxx",      // IP local
-    "MAC": "XX:XX:XX:XX:XX:XX",   // Endereço MAC
-    "Temperatura": xx.xx,         // Em graus Celsius
-    "Umidade": xx.xx,            // Em porcentagem
-    "Potenciometro": xxxx        // Valor 0-4095
-}
-```
-
-### Configuração do Código Q1
+# 🌤️ Monitoramento Climático com ESP32 e ThingSpeak
 
-Em `q1/src/main.cpp`, configure:
-```cpp
-const char* ID        = "ID_do_Grupo";     // Seu identificador
-const char* moduleID  = "Meu_ESP32";       // Nome do seu ESP32
-```
-
-## 📊 Pasta Q2 - Integração com ThingSpeak
+Este projeto faz parte da disciplina **Disruptive Architectures: IoT, IoB & Generative AI** e tem como objetivo o **monitoramento remoto de condições climáticas**, utilizando um **ESP32 com sensor DHT22**, e envio contínuo dos dados para a plataforma **ThingSpeak**.
 
-### Descrição
-
-A pasta `q2` contém um projeto alternativo que demonstra a integração com a plataforma ThingSpeak para visualização e análise de dados IoT.
+⚠️ Este sistema é útil para identificar **condições extremas de temperatura e umidade** e **emitir alertas visuais locais via LEDs**.
 
-### Configuração do ThingSpeak
+---
 
-1. **Pré-requisitos**
-   - Criar uma conta no [ThingSpeak](https://thingspeak.com)
-   - Criar um novo canal no ThingSpeak
-   - Obter o Channel ID e Write API Key
+## 🎯 Objetivos da Solução
 
-2. **Configurações no Código**
-   Em `q2/src/main.cpp`, configure:
-   ```cpp
-   unsigned long channelID = SEU_CHANNEL_ID;        // Substitua pelo seu Channel ID
-   const char* writeAPIKey = "SUA_WRITE_API_KEY";   // Substitua pela sua Write API Key
-   ```
-
-### Funcionalidades do Projeto Q2
+- Realizar leituras de **temperatura e umidade em tempo real**
+- Simular a **velocidade do vento** (em ambientes sem anemômetro físico)
+- **Sinalizar riscos climáticos localmente** com LEDs
+- **Enviar dados automaticamente à nuvem (ThingSpeak)**
+- Proporcionar uma **base simples, replicável e didática** para projetos de IoT
 
-- Conexão automática com WiFi
-- Envio de até 4 campos de dados para o ThingSpeak
-- Intervalo de envio de 20 segundos (respeita limite gratuito)
-- Feedback via monitor serial
-- Reconexão automática em caso de perda de conexão
-
-### Estrutura dos Dados Q2
+---
 
-O projeto envia 4 campos (fields) para o ThingSpeak:
-```cpp
-field1: valor1  // Primeiro valor
-field2: valor2  // Segundo valor
-field3: valor3  // Terceiro valor
-field4: valor4  // Quarto valor
-```
+## 📸 Imagens Ilustrativas
 
-## ⚙️ Configuração do Ambiente
-
-### Pré-requisitos
+### 🔌 Diagrama de Conexão no Wokwi
+<img src="imagens/diagrama.JPG" width="500"/>
 
-1. **Software**
-   - Visual Studio Code
-   - Extensão PlatformIO IDE
-   - Git (para clonar o repositório)
+### 📊 Visualização no Dashboard ThingSpeak
+<img src="imagens/thingspeak.png" width="500"/>
 
-2. **Simulação**
-   - Conta Wokwi
-   - Licença Wokwi Simulator
-   - Extensão Wokwi no VS Code
+---
 
-### Instalação
+## 🧩 Componentes Utilizados
 
-1. **Clone o Repositório**
-   ```bash
-   git clone https://github.com/prof-atritiack/2TDS-GS2025.git
-   cd 2TDS-GS2025
-   ```
-
-2. **Configuração do VS Code**
-   1. Abra o VS Code
-   2. File > Open Folder
-   3. Selecione a pasta `2TDS-GS2025`
-   4. Aguarde o PlatformIO inicializar
-
-3. **Configuração do Wokwi**
-   1. Instale a extensão Wokwi
-   2. Faça login na sua conta
-   3. Verifique a licença ativa
-
-### Dependências
-
-O projeto utiliza as seguintes bibliotecas:
-- ArduinoJson (JSON)
-- DHT sensor library (Sensor)
-- Adafruit Unified Sensor (Base)
-- PubSubClient (MQTT)
-- ThingSpeak (apenas para Q2)
-
-> ⚠️ **Importante**: Aguarde a instalação completa das dependências antes de compilar!
-
-## 🛠️ Criação e Inserção de Diagramas Wokwi
-
-### Como criar um novo diagrama no Wokwi Online
-
-1. Acesse [https://wokwi.com/](https://wokwi.com/)
-2. Clique em **"New Project"** e escolha o microcontrolador desejado (ex: ESP32).
-3. Monte seu circuito utilizando os componentes disponíveis.
-4. Salve o projeto e clique em **"Share"** para copiar o link ou baixe o arquivo `diagram.json`.
+| Componente    | Função                                          |
+|---------------|-------------------------------------------------|
+| ESP32         | Microcontrolador Wi-Fi                         |
+| DHT22         | Sensor de temperatura e umidade                |
+| LED Vermelho  | Indica condições climáticas extremas           |
+| LED Verde     | Indica ambiente dentro da faixa segura         |
+| ThingSpeak    | Armazena e exibe dados em tempo real na nuvem  |
+| Wokwi         | Simulador virtual para prototipagem            |
 
-### Como inserir e editar diagramas neste projeto
+---
+## 📊 Dashboard no ThingSpeak
 
-1. **Adicione o arquivo do diagrama:**
-   - Baixe o arquivo `diagram.json` do seu projeto Wokwi.
-   - Coloque o arquivo na pasta correspondente do seu projeto local (exemplo: `q1/diagram.json` ou `q2/diagram.json`).
+Para facilitar a visualização e o monitoramento dos dados coletados pelo sensor DHT22, foi criada uma **dashboard personalizada** na plataforma ThingSpeak.  
 
-2. **Edição do diagrama:**
-   - Você pode editar o arquivo `diagram.json` diretamente pelo editor de texto (VS Code) ou reimportá-lo no Wokwi para ajustes visuais.
-   - Para editar no Wokwi, clique em **"Import Project"** e selecione seu `diagram.json`.
+### Funcionalidades da Dashboard
 
-3. **Simulação:**
-   - Com o arquivo `diagram.json` na pasta do projeto, utilize a extensão Wokwi no VS Code para simular seu circuito junto ao código fonte.
+- **Gráficos em tempo real**: Exibe a evolução da **temperatura**, **umidade** e **velocidade do vento** com atualização automática conforme os dados chegam do ESP32.
+- **Visualização clara**: Cada parâmetro possui um gráfico individual, permitindo uma análise detalhada de cada variável ambiental.
+- **Histórico de dados**: Os dados são armazenados no ThingSpeak, possibilitando consultas e análises históricas a qualquer momento.
+- **Alertas visuais**: A dashboard evidencia visualmente situações fora dos parâmetros normais, permitindo uma resposta rápida.
 
-> **Dica:** Mantenha o arquivo `diagram.json` atualizado e versionado junto ao seu código para facilitar revisões e simulações futuras.
+### Como funciona
 
-## 🔍 Monitor Serial
+1. O ESP32 envia os dados via HTTP para o ThingSpeak usando a chave API configurada.
+2. O ThingSpeak recebe os dados e atualiza os gráficos da dashboard automaticamente.
+3. O usuário pode acessar a dashboard pelo navegador para monitorar as condições ambientais em tempo real e historicamente.
 
-O monitor serial (115200 baud rate) exibe informações detalhadas:
+### Benefícios
 
-### Inicialização
-```
-Conectando ao Wi-Fi.....
-Wi-Fi conectado!
-IP: 192.168.1.100
-MAC Address: A4:CF:12:BF:7A:E5
-Conectando ao Broker MQTT...
-Conectado ao Broker!
-```
-
-### Possíveis Erros
-```
-Reconectando Wi-Fi...     // Perda de conexão
-Erro na leitura do DHT    // Falha no sensor
-Falha na conexão. Estado: -2   // Problema MQTT
-```
+- Monitoramento remoto, sem a necessidade de estar próximo ao dispositivo.
+- Interface amigável e acessível de qualquer dispositivo conectado à internet.
+- Suporte a alertas e integrações futuras com outras plataformas IoT.
 
-O LED onboard (GPIO2) pisca após cada envio bem-sucedido!
-
-## Visualização dos Dados
+---
 
-1. **Node-RED**
-   - Acesse: `172.208.54.189:1880`
-   - Visualização em tempo real
-   - Gráficos interativos
-
-2. **Monitor Serial**
-   - Debug local
-   - Verificação de erros
-   - Teste de funcionamento
-
-## Personalização do Node-RED ⚡
-
-O Node-RED é uma ferramenta poderosa que permite expandir significativamente as capacidades do seu projeto. Recomenda-se fortemente que você desenvolva seus próprios fluxos para atender às necessidades específicas do seu projeto.
-
-### Possibilidades de Expansão
-
-1. **Integração com APIs Externas**
-   - Conexão com serviços de previsão do tempo
-   - Integração com APIs de notificação
-   - Webhooks para sistemas externos
-   - Automação com serviços em nuvem
-
-2. **Banco de Dados**
-   - Armazenamento histórico de leituras
-   - Análise de tendências
-   - Backup de dados
-   - Consultas personalizadas
-   
-3. **Dashboards Personalizados**
-   - Gráficos em tempo real
-   - Indicadores personalizados
-   - Painéis de controle interativos
-   - Visualizações específicas para seu caso de uso
-
-4. **Lógica de Negócio**
-   - Processamento de dados
-   - Filtros e transformações
-   - Regras de negócio
-   - Alertas condicionais
-
-### Dicas de Implementação
-
-- Comece com fluxos simples e incremente gradualmente
-- Use nodes de debug para verificar o processamento dos dados
-- Documente seus fluxos com nodes de comentário
-- Faça backup regular dos seus fluxos
-- Considere implementar autenticação para seus endpoints
-
-### Recursos para Node-RED
-
-- [Node-RED Library](https://flows.nodered.org/)
-- [Documentação Oficial](https://nodered.org/docs/)
-- [Guia de Boas Práticas](https://nodered.org/docs/user-guide/writing-flows)
-
-## Créditos
-
-Este projeto é baseado no trabalho original do Professor Arnaldo Viana:
-[Repositório Original](https://github.com/arnaldojr/iot-esp32-wokwi-vscode.git)
-
-- Este projeto utiliza o **GitHub Copilot** e o **Claude 3.5 Sonnet** como assistentes de programação para geração e revisão de código, documentação e automação de tarefas.
-
-## Suporte
-
-Precisa de ajuda?
-1. Verifique as issues no repositório
-2. Consulte a documentação das bibliotecas
-3. Contate o professor ou monitores
-
-## Referências e Recursos
-
-### Documentação Técnica
-- [Documentação ESP32](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/)
-- [Biblioteca PubSubClient](https://pubsubclient.knolleary.net/)
-- [ArduinoJson](https://arduinojson.org/)
-- [Wokwi](https://docs.wokwi.com/)
-
-### Desenvolvimento Assistido por IA
-Este projeto foi desenvolvido com auxílio de IA Generativa:
-- **Modelo**: Claude 3.5 Sonnet
-- **Plataforma**: Cursor IDE
-- **Aplicação**: 
-  - Geração e revisão de código
-  - Documentação técnica
-  - Debugging assistido
-  - Otimização de código
-
-### Recursos Educacionais
-- [ESP32 - Primeiros Passos](https://randomnerdtutorials.com/getting-started-with-esp32/)
-- [MQTT Essentials](https://www.hivemq.com/mqtt-essentials/)
-
-## Uso com Placas Físicas
-
-Para grupos que optarem por usar uma placa ESP32 física:
-
-1. **Arquivo para Arduino**
-   - Use o arquivo `q1/esp32_mqtt_dht22.ino`
-   - Contém o mesmo código e funcionalidades do projeto
-
-2. **Bibliotecas Necessárias**
-   - `PubSubClient`
-   - `ArduinoJson`
-   - `DHT sensor library`
-   - `Adafruit Unified Sensor`
-
-3. **Configuração do Código**
-   - Configure suas credenciais Wi-Fi:
-     ```cpp
-     const char* ssid = "SUA_REDE_WIFI";
-     const char* password = "SUA_SENHA_WIFI";
-     ```
-   - Ajuste os identificadores:
-     ```cpp
-     const char* ID = "ID_do_Grupo";
-     const char* moduleID = "Meu_ESP32";
-     ```
-
-4. **Conexões Físicas**
-   - DHT22:
-     - VCC → 3.3V
-     - GND → GND
-     - DATA → GPIO12
-   - Potenciômetro:
-     - VCC → 3.3V
-     - GND → GND
-     - SIGNAL → GPIO34
-   - LED onboard está no GPIO2
-
-> ⚠️ **Importante**: Verifique todas as conexões antes de energizar a placa e use resistores pull-up quando necessário.
-
-## 📊 Pasta Q2 - Integração com ThingSpeak
-
-A pasta `q2` contém um projeto alternativo que demonstra a integração com a plataforma ThingSpeak para visualização e análise de dados IoT.
-
-### Configuração do ThingSpeak
-
-1. **Pré-requisitos**
-   - Criar uma conta no [ThingSpeak](https://thingspeak.com)
-   - Criar um novo canal no ThingSpeak
-   - Obter o Channel ID e Write API Key
-
-2. **Configurações no Código**
-   Em `q2/src/main.cpp`, configure:
-   ```cpp
-   unsigned long channelID = SEU_CHANNEL_ID;        // Substitua pelo seu Channel ID
-   const char* writeAPIKey = "SUA_WRITE_API_KEY";   // Substitua pela sua Write API Key
-   ```
-
-3. **Dependências Adicionais**
-   - Biblioteca ThingSpeak (será instalada automaticamente pelo PlatformIO)
-
-### Funcionalidades do Projeto Q2
-
-- Conexão automática com WiFi
-- Envio de até 4 campos de dados para o ThingSpeak
-- Intervalo de envio de 20 segundos (respeita limite gratuito)
-- Feedback via monitor serial
-- Reconexão automática em caso de perda de conexão
-
-### Estrutura dos Dados
-
-O projeto envia 4 campos (fields) para o ThingSpeak:
-```cpp
-field1: valor1  // Primeiro valor
-field2: valor2  // Segundo valor
-field3: valor3  // Terceiro valor
-field4: valor4  // Quarto valor
-```
-
-### Visualização no ThingSpeak
-
-1. Acesse sua conta no ThingSpeak
-2. Navegue até seu canal
-3. Visualize os gráficos em tempo real
-4. Configure widgets e análises personalizadas
-
-### Personalização
-
-Você pode modificar o código para:
-- Alterar o número de campos enviados
-- Modificar o intervalo de envio
-- Adicionar mais sensores
-- Implementar lógicas específicas
-
-> ⚠️ **Importante**: 
-> - O plano gratuito do ThingSpeak permite atualizações a cada 15 segundos
-> - Mantenha suas chaves API em segurança
-> - Considere usar variáveis de ambiente para as credenciais
-
-## 🔎 Utilização do MQTT Explorer para Mapear Tópicos
-
-Para facilitar o monitoramento, análise e mapeamento dos tópicos MQTT utilizados no seu projeto, recomenda-se o uso do aplicativo **MQTT Explorer**.
-
-### O que é o MQTT Explorer?
-
-O MQTT Explorer é uma ferramenta gráfica gratuita que permite visualizar, explorar e depurar todos os tópicos e mensagens trafegando no seu broker MQTT de forma intuitiva.
-
-### Como utilizar:
-
-1. Baixe e instale o MQTT Explorer em: [https://mqtt-explorer.com/](https://mqtt-explorer.com/)
-2. Abra o aplicativo e clique em **"Connect"**.
-3. Preencha os dados do broker:
-   - **Host:** `172.208.54.189`
-   - **Port:** `1883`
-   - **Username:** `gs2025`
-   - **Password:** `q1w2e3r4`
-4. Clique em **"Connect"** para visualizar todos os tópicos e mensagens em tempo real.
-
-> **Dica:** O MQTT Explorer é excelente para depuração, entendimento da estrutura dos tópicos, análise de payloads e acompanhamento do fluxo de dados entre dispositivos e dashboards.
+## 🔁 Fluxo Detalhado da Comunicação
+
+Este projeto envolve um fluxo contínuo e automático de dados entre três componentes principais:
+
+### 1. Sensor e Dispositivo (ESP32 + DHT22)
+
+- O ESP32 conectado ao sensor DHT22 faz leituras periódicas de **temperatura** e **umidade**.
+- Também é gerada uma simulação da **velocidade do vento** para enriquecer os dados.
+- Com base nesses valores, o ESP32 aciona dois LEDs para indicar:
+  - **LED Verde:** ambiente estável, dentro das faixas de temperatura e umidade consideradas seguras.
+  - **LED Vermelho:** alerta para condições extremas (temperatura ou umidade fora da faixa segura).
+- Esse dispositivo atua como um **gateway local**, realizando o pré-processamento dos dados.
+
+### 2. Comunicação via Wi-Fi
+
+- O ESP32 se conecta a uma rede Wi-Fi (neste projeto, rede “Wokwi-GUEST” para simulação).
+- A cada 15 segundos, o ESP32 monta uma requisição HTTP do tipo GET contendo os dados coletados.
+- Essa requisição é enviada para o serviço ThingSpeak usando uma URL com a chave API e os valores dos sensores.
+
+### 3. Plataforma ThingSpeak (Nuvem)
+
+- ThingSpeak recebe os dados via API REST.
+- Os valores são armazenados em campos específicos (field1, field2, field3).
+- O ThingSpeak disponibiliza um dashboard online que mostra os dados em tempo real, com gráficos que facilitam a visualização da evolução das condições ambientais.
+- Essa plataforma funciona como um servidor na nuvem, armazenando dados históricos e permitindo monitoramento remoto.
+
+---
+
+### Resumo do Fluxo
+
+| Etapa              | Atividade                                           |
+|--------------------|----------------------------------------------------|
+| 1. Leitura         | ESP32 lê temperatura e umidade com DHT22            |
+| 2. Avaliação       | Decisão sobre condição estável ou extrema (LEDs)    |
+| 3. Envio           | ESP32 envia dados para ThingSpeak via HTTP GET      |
+| 4. Armazenamento   | ThingSpeak recebe e armazena os dados                |
+| 5. Visualização    | Dados exibidos no dashboard para monitoramento remoto |
+
+---
+
+Essa arquitetura permite o monitoramento local (LEDs) e remoto (ThingSpeak) de forma integrada e contínua, facilitando a criação de soluções IoT eficientes, escaláveis e fáceis de replicar.
+
+
+
