@@ -1,41 +1,97 @@
-# 🌤️ Monitoramento Climático com ESP32 e ThingSpeak
+# 🌡️ Projeto IoT – Monitoramento Ambiental com ESP32, DHT22 e ThingSpeak
 
-Este projeto faz parte da disciplina **Disruptive Architectures: IoT, IoB & Generative AI** e tem como objetivo o **monitoramento remoto de condições climáticas**, utilizando um **ESP32 com sensor DHT22**, e envio contínuo dos dados para a plataforma **ThingSpeak**.
+## 📌 Descrição do Projeto
 
-⚠️ Este sistema é útil para identificar **condições extremas de temperatura e umidade** e **emitir alertas visuais locais via LEDs**.
-
----
-
-## 🎯 Objetivos da Solução
-
-- Realizar leituras de **temperatura e umidade em tempo real**
-- Simular a **velocidade do vento** (em ambientes sem anemômetro físico)
-- **Sinalizar riscos climáticos localmente** com LEDs
-- **Enviar dados automaticamente à nuvem (ThingSpeak)**
-- Proporcionar uma **base simples, replicável e didática** para projetos de IoT
+Este projeto tem como objetivo criar uma solução de monitoramento ambiental utilizando a placa **ESP32**, o sensor **DHT22** para captar temperatura e umidade, e LEDs para indicar situações de alerta. Os dados são enviados para a plataforma **ThingSpeak**, onde podem ser visualizados em tempo real através de um dashboard.
 
 ---
 
-## 📸 Imagens Ilustrativas
+## ⚙️ Componentes Utilizados
 
-### 🔌 Diagrama de Conexão no Wokwi
-<img src="imagens/imagem_diagrama.JPG" width="500"/>
-
-### 📊 Visualização no Dashboard ThingSpeak
-<img src="imagens/imagem-thingspeak.png" width="500"/>
+- ESP32 DevKit V1
+- Sensor DHT22
+- LED Vermelho (alerta)
+- LED Verde (ambiente estável)
+- Plataforma ThingSpeak
+- Conexão Wi-Fi
 
 ---
 
-## 🧩 Componentes Utilizados
+## 🚀 Fluxo de Funcionamento
 
-| Componente    | Função                                          |
-|---------------|-------------------------------------------------|
-| ESP32         | Microcontrolador Wi-Fi                         |
-| DHT22         | Sensor de temperatura e umidade                |
-| LED Vermelho  | Indica condições climáticas extremas           |
-| LED Verde     | Indica ambiente dentro da faixa segura         |
-| ThingSpeak    | Armazena e exibe dados em tempo real na nuvem  |
-| Wokwi         | Simulador virtual para prototipagem            |
+1. O ESP32 inicializa e conecta-se à rede Wi-Fi.
+2. O sensor DHT22 coleta dados de **temperatura** e **umidade**.
+3. O ESP32 lê os dados e ativa:
+   - **LED vermelho** caso os valores estejam fora da faixa segura (temp < 12°C ou > 35°C / umidade < 40% ou > 70%)
+   - **LED verde** se os dados estiverem dentro dos limites aceitáveis.
+4. Os dados (temperatura, umidade e velocidade do vento simulada) são enviados via HTTP para a plataforma **ThingSpeak**.
+5. Na **dashboard do ThingSpeak**, os dados são visualizados graficamente em tempo real.
+
+---
+
+## 📘 Instruções Didáticas (Configuração, Execução e Testes)
+
+### 🛠️ Configuração
+
+1. **Hardware**:
+   - Conecte o DHT22 à porta D15.
+   - Conecte LEDs:
+     - LED vermelho no pino D13.
+     - LED verde no pino D12.
+   - Alimente o ESP32 com 3.3V e GND.
+
+2. **ThingSpeak**:
+   - Acesse: [https://thingspeak.com](https://thingspeak.com)
+   - Crie um canal com 3 campos: Temperatura, Umidade e Velocidade do Vento.
+   - Copie a sua **Write API Key**.
+
+3. **IDE / Simulador**:
+   - Use o [Wokwi](https://wokwi.com/) ou Arduino IDE com a biblioteca `DHT`.
+   - Configure a conexão Wi-Fi no código.
+   - Insira a API_KEY copiada do ThingSpeak.
+
+---
+
+### ▶️ Execução
+
+1. Faça o upload do código para o ESP32 (ou rode no simulador).
+2. Aguarde a conexão Wi-Fi.
+3. Veja os dados sendo enviados ao ThingSpeak a cada 15 segundos.
+4. Observe os LEDs:
+   - Verde: dados normais.
+   - Vermelho: alerta de temperatura/umidade fora do padrão.
+
+---
+
+### 🧪 Testes da Aplicação
+
+- **Temperatura**: modifique manualmente (no simulador) ou aproxime calor/frio real para testar os limites de ativação dos LEDs.
+- **Umidade**: simule valores baixos/altos para acionar o LED vermelho.
+- **Velocidade do vento**: é gerada aleatoriamente para testes.
+
+Valide os dados diretamente na **dashboard do ThingSpeak**.
+
+---
+
+## 📊 Dashboard no ThingSpeak
+
+A dashboard foi configurada com 3 gráficos:
+
+- **Temperatura (Field1)**
+- **Umidade (Field2)**
+- **Velocidade do Vento (Field3)**
+
+Atualização a cada 15 segundos, com visualização contínua dos dados.
+
+---
+
+## 🧭 Passo a Passo Resumido
+
+1. Monte o circuito com ESP32 + DHT22 + LEDs.
+2. Configure canal no ThingSpeak.
+3. Suba o código com Wi-Fi e API_KEY corretos.
+4. Verifique os gráficos e LEDs em ação.
+
 
 ---
 ## 📊 Dashboard no ThingSpeak
