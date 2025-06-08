@@ -19,10 +19,10 @@ Este projeto faz parte da disciplina **Disruptive Architectures: IoT, IoB & Gene
 ## 📸 Imagens Ilustrativas
 
 ### 🔌 Diagrama de Conexão no Wokwi
-<img src="imagens/diagrama.JPG" width="500"/>
+<img src="imagens/imagem_diagrama.JPG" width="500"/>
 
 ### 📊 Visualização no Dashboard ThingSpeak
-<img src="imagens/thingspeak.png" width="500"/>
+<img src="imagens/imagem-thingspeak.png" width="500"/>
 
 ---
 
